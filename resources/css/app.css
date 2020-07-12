@@ -1,0 +1,37 @@
+/*******************
+ CUSTOM CSS
+ *******************/
+.theme--light .v-data-table tbody tr:nth-child(even) {background-color: #f2f2f2}
+.v-divider {border-width: thin}
+.v-app-bar.v-app-bar--fixed {z-index: 7 !important;}
+
+.fade-enter-active,
+.fade-leave-active {
+    transition-duration: 0.2s;
+    transition-property: opacity;
+    transition-timing-function: ease;
+}
+.fade-enter,
+.fade-leave-active {
+    opacity: 0
+}
+.v-card--reveal {
+    align-items: center;
+    bottom: 0;
+    justify-content: center;
+    opacity: .5;
+    position: absolute;
+    width: 100%;
+}
+.v-input--is-readonly *{
+    cursor: not-allowed !important;
+}
+.date-input *{
+    cursor: pointer !important;
+}
+
+
+.colorful{
+    background-color: #42ecf5;
+    background-image: linear-gradient(120deg, #42ecf5, #42f5a1);
+}
