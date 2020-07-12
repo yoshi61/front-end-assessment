@@ -1944,6 +1944,35 @@ function _defineProperty(obj, key, value) {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2018,6 +2047,8 @@ function _defineProperty(obj, key, value) {
         cuisines: [],
         categories: []
       },
+      ratings: ['1', '2', '3', '4', '5'],
+      prices: ['$', '', '', '$$$$'],
       items: [{
         restaurant: {
           name: 'AAAAAAAAAAAAAAA'
@@ -42879,6 +42910,7 @@ var render = function() {
         [
           _c(
             "v-row",
+            { staticClass: "px-4" },
             [
               _c(
                 "v-col",
@@ -42895,7 +42927,13 @@ var render = function() {
                           _c(
                             "v-row",
                             { attrs: { "no-gutters": "" } },
-                            [_c("v-col", [_c("div", [_vm._v("CATEGORY")])])],
+                            [
+                              _c(
+                                "v-col",
+                                { staticClass: "subtitle-2 font-weight-bold" },
+                                [_vm._v("CATEGORY")]
+                              )
+                            ],
                             1
                           ),
                           _vm._v(" "),
@@ -42945,7 +42983,13 @@ var render = function() {
                           _c(
                             "v-row",
                             { attrs: { "no-gutters": "" } },
-                            [_c("v-col", [_vm._v("CUISINE")])],
+                            [
+                              _c(
+                                "v-col",
+                                { staticClass: "subtitle-2 font-weight-bold" },
+                                [_vm._v("CUISINE")]
+                              )
+                            ],
                             1
                           ),
                           _vm._v(" "),
@@ -42997,7 +43041,81 @@ var render = function() {
                 1
               ),
               _vm._v(" "),
-              _c("v-col", { attrs: { cols: "4" } })
+              _c(
+                "v-col",
+                { attrs: { cols: "4" } },
+                [
+                  _c(
+                    "v-row",
+                    { attrs: { "no-gutters": "" } },
+                    [
+                      _c(
+                        "v-col",
+                        {
+                          staticClass: "subtitle-2 font-weight-bold",
+                          attrs: { cols: "12" }
+                        },
+                        [
+                          _vm._v(
+                            "\n                        RATING\n                    "
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "v-col",
+                        { attrs: { cols: "12" } },
+                        [
+                          _c("v-range-slider", {
+                            attrs: {
+                              "tick-labels": _vm.ratings,
+                              value: [0, 4],
+                              min: "0",
+                              max: "4",
+                              "hide-details": "",
+                              color: "accent"
+                            }
+                          })
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "v-col",
+                        {
+                          staticClass: "subtitle-2 font-weight-bold pt-4",
+                          attrs: { cols: "12" }
+                        },
+                        [
+                          _vm._v(
+                            "\n                        COST\n                    "
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "v-col",
+                        { attrs: { cols: "12" } },
+                        [
+                          _c("v-range-slider", {
+                            attrs: {
+                              "tick-labels": _vm.prices,
+                              value: [0, 3],
+                              min: "0",
+                              max: "3",
+                              "hide-details": "",
+                              color: "accent"
+                            }
+                          })
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
             ],
             1
           )
@@ -95203,6 +95321,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuetify_lib_components_VDivider__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! vuetify/lib/components/VDivider */ "./node_modules/vuetify/lib/components/VDivider/index.js");
 /* harmony import */ var vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! vuetify/lib/components/VList */ "./node_modules/vuetify/lib/components/VList/index.js");
 /* harmony import */ var vuetify_lib_components_VNavigationDrawer__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! vuetify/lib/components/VNavigationDrawer */ "./node_modules/vuetify/lib/components/VNavigationDrawer/index.js");
+/* harmony import */ var vuetify_lib_components_VRangeSlider__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! vuetify/lib/components/VRangeSlider */ "./node_modules/vuetify/lib/components/VRangeSlider/index.js");
 
 
 
@@ -95237,7 +95356,8 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
 
 
 
-_node_modules_vuetify_loader_lib_runtime_installComponents_js__WEBPACK_IMPORTED_MODULE_3___default()(component, {VAppBar: vuetify_lib_components_VAppBar__WEBPACK_IMPORTED_MODULE_4__["VAppBar"],VCard: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_5__["VCard"],VCardTitle: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_5__["VCardTitle"],VCheckbox: vuetify_lib_components_VCheckbox__WEBPACK_IMPORTED_MODULE_6__["VCheckbox"],VCol: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_7__["VCol"],VContainer: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_7__["VContainer"],VDivider: vuetify_lib_components_VDivider__WEBPACK_IMPORTED_MODULE_8__["VDivider"],VList: vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_9__["VList"],VListItem: vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_9__["VListItem"],VListItemContent: vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_9__["VListItemContent"],VListItemGroup: vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_9__["VListItemGroup"],VListItemTitle: vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_9__["VListItemTitle"],VNavigationDrawer: vuetify_lib_components_VNavigationDrawer__WEBPACK_IMPORTED_MODULE_10__["VNavigationDrawer"],VRow: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_7__["VRow"]})
+
+_node_modules_vuetify_loader_lib_runtime_installComponents_js__WEBPACK_IMPORTED_MODULE_3___default()(component, {VAppBar: vuetify_lib_components_VAppBar__WEBPACK_IMPORTED_MODULE_4__["VAppBar"],VCard: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_5__["VCard"],VCardTitle: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_5__["VCardTitle"],VCheckbox: vuetify_lib_components_VCheckbox__WEBPACK_IMPORTED_MODULE_6__["VCheckbox"],VCol: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_7__["VCol"],VContainer: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_7__["VContainer"],VDivider: vuetify_lib_components_VDivider__WEBPACK_IMPORTED_MODULE_8__["VDivider"],VList: vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_9__["VList"],VListItem: vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_9__["VListItem"],VListItemContent: vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_9__["VListItemContent"],VListItemGroup: vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_9__["VListItemGroup"],VListItemTitle: vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_9__["VListItemTitle"],VNavigationDrawer: vuetify_lib_components_VNavigationDrawer__WEBPACK_IMPORTED_MODULE_10__["VNavigationDrawer"],VRangeSlider: vuetify_lib_components_VRangeSlider__WEBPACK_IMPORTED_MODULE_11__["VRangeSlider"],VRow: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_7__["VRow"]})
 
 
 /* hot reload */

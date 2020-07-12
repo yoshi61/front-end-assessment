@@ -9,14 +9,12 @@
                 light
                 :height="200"
         >
-            <v-row>
+            <v-row class="px-4">
                 <v-col cols="8">
                     <v-row no-gutters>
                         <v-col cols="3">
                             <v-row no-gutters>
-                                <v-col>
-                                    <div>CATEGORY</div>
-                                </v-col>
+                                <v-col class="subtitle-2 font-weight-bold">CATEGORY</v-col>
                             </v-row>
                             <v-row no-gutters>
                                 <v-col
@@ -35,7 +33,7 @@
                         </v-col>
                         <v-col cols="9">
                             <v-row no-gutters>
-                                <v-col>CUISINE</v-col>
+                                <v-col class="subtitle-2 font-weight-bold">CUISINE</v-col>
                             </v-row>
                             <v-row no-gutters>
                                 <v-col
@@ -54,7 +52,38 @@
                         </v-col>
                     </v-row>
                 </v-col>
-                <v-col cols="4"></v-col>
+                <v-col cols="4">
+                    <v-row no-gutters>
+                        <v-col cols="12" class="subtitle-2 font-weight-bold">
+                            RATING
+                        </v-col>
+                        <v-col cols="12">
+                            <v-range-slider
+                                    :tick-labels="ratings"
+                                    :value="[0, 4]"
+                                    min="0"
+                                    max="4"
+                                    hide-details
+                                    color="accent"
+                            >
+                            </v-range-slider>
+                        </v-col>
+                        <v-col cols="12" class="subtitle-2 font-weight-bold pt-4">
+                            COST
+                        </v-col>
+                        <v-col cols="12">
+                            <v-range-slider
+                                    :tick-labels="prices"
+                                    :value="[0, 3]"
+                                    min="0"
+                                    max="3"
+                                    hide-details
+                                    color="accent"
+                            >
+                            </v-range-slider>
+                        </v-col>
+                    </v-row>
+                </v-col>
             </v-row>
         </v-app-bar>
 
@@ -199,6 +228,21 @@
                 cuisines: [],
                 categories: [],
             },
+
+            ratings: [
+                '1',
+                '2',
+                '3',
+                '4',
+                '5',
+            ],
+
+            prices: [
+                '$',
+                '',
+                '',
+                '$$$$',
+            ],
 
             items: [
                 { restaurant: {name: 'AAAAAAAAAAAAAAA'} },
