@@ -2,8 +2,8 @@
     <v-app-bar
                         :clipped-left="$vuetify.breakpoint.lgAndUp"
                         app
-                        color="blue darken-3"
-                        dark
+                        color="secondary"
+                        light
                         :height="200"
                 >
                     <v-app-bar-nav-icon></v-app-bar-nav-icon>

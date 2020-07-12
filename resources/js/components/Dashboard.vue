@@ -1,9 +1,9 @@
 <template>
-    <div>
+    <v-container class="fill-height pa-0">
         <filters-bar></filters-bar>
         <results-drawer></results-drawer>
         <restaurant-details></restaurant-details>
-    </div>
+    </v-container>
 </template>
 
 <script>

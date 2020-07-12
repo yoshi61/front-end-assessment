@@ -1,9 +1,7 @@
 <template>
     <v-app>
-        <v-content class="primaryLight">
-            <transition name="fade"  mode="out-in">
-                <router-view></router-view>
-            </transition>
+        <v-content>
+            <router-view></router-view>
         </v-content>
     </v-app>
 </template>
