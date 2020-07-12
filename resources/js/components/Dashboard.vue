@@ -19,7 +19,7 @@
                             <v-row no-gutters>
                                 <v-col
                                         cols="12"
-                                        :key="category.id"
+                                        :key="'category-' + category.id"
                                         v-for="category in categories"
                                 >
                                     <v-checkbox
@@ -38,7 +38,7 @@
                             <v-row no-gutters>
                                 <v-col
                                         cols="4"
-                                        :key="cuisine.cuisine_id"
+                                        :key="'cuisine-' + cuisine.cuisine_id"
                                         v-for="cuisine in cuisines"
                                 >
                                     <v-checkbox
@@ -95,31 +95,43 @@
                 :width="500"
                 class="primary"
         >
-            <v-list-item
-                    class="text-center"
-            >
-                <v-list-item-content class="text-center">
-                    <v-list-item-title>
-                        RESULTS
-                    </v-list-item-title>
-                </v-list-item-content>
-            </v-list-item>
+            <template v-slot:prepend>
+                <v-list-item
+                        class="text-center"
+                >
+                    <v-list-item-content class="text-center">
+                        <v-list-item-title class="subtitle-2 font-weight-bold">
+                            RESULTS
+                        </v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
+                <v-progress-linear
+                        :active="loading"
+                        indeterminate
+                        absolute
+                        color="accent"
+                ></v-progress-linear>
+            </template>
 
-            <v-divider></v-divider>
-            <v-list dense>
-                <v-list-item-group v-model="items" color="accent">
-                    <v-list-item
-                            :key="item.restaurant.name"
-                            v-for="item in items"
-                    >
-                        <v-list-item-content>
-                            <v-list-item-title>
-                                {{ item.restaurant.name }}
-                            </v-list-item-title>
-                        </v-list-item-content>
-                    </v-list-item>
+            <v-list dense class="pt-0">
+                <v-list-item-group v-model="selected_index" color="accent">
+
+                    <template v-for="item in api_results.restaurants">
+                        <v-divider></v-divider>
+                        <v-list-item
+                                :key="item.restaurant.id"
+                        >
+                            <v-list-item-content>
+                                <v-list-item-title>
+                                    {{ item.restaurant.name }}
+                                </v-list-item-title>
+                            </v-list-item-content>
+                        </v-list-item>
+                    </template>
+
                 </v-list-item-group>
             </v-list>
+
         </v-navigation-drawer>
 
         <!--    restaurant details    -->
@@ -127,7 +139,7 @@
             <transition name="fade" mode="out-in">
                 <v-card class="elevation-0 primaryLight">
                     <v-card-title>Restaurant A</v-card-title>
-                    {{ this.filters }}
+                    {{ this.api_results.restaurants }}
                 </v-card>
             </transition>
         </v-container>
@@ -218,7 +230,7 @@
                     value: false
                 },
                 {
-                    cuisine_id: 3,
+                    cuisine_id: 1,
                     cuisine_name: "Other",
                     value: false
                 }
@@ -231,9 +243,9 @@
 
             ratings: [
                 '1',
-                '2',
-                '3',
-                '4',
+                '',
+                '',
+                '',
                 '5',
             ],
 
@@ -244,16 +256,9 @@
                 '$$$$',
             ],
 
-            items: [
-                { restaurant: {name: 'AAAAAAAAAAAAAAA'} },
-                { restaurant: {name: 'bbbbbbbb'} },
-                { restaurant: {name: 'ccccccc'} },
-                { restaurant: {name: 'ddddddd'} },
-                { restaurant: {name: 'eeeeeee'} },
-                { restaurant: {name: 'fffffff'} },
-                { restaurant: {name: 'ggggggg'} },
-                { restaurant: {name: 'hhhhhhh'} },
-            ],
+            selected_index: null,
+
+            loading: false,
         }),
 
         watch: {
@@ -273,7 +278,11 @@
 
         methods: {
             searchRestaurants(){
-                this.$store.dispatch('zomatoApis/searchForRestaurants', {cuisines:[1,2,3]});
+                this.loading = true;
+                this.$store.dispatch('zomatoApis/searchForRestaurants', this.filters)
+                    .finally(()=>{
+                        this.loading = false;
+                    });
             },
 
 

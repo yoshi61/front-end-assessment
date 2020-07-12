@@ -1973,6 +1973,18 @@ function _defineProperty(obj, key, value) {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2039,7 +2051,7 @@ function _defineProperty(obj, key, value) {
         cuisine_name: "Pub Food",
         value: false
       }, {
-        cuisine_id: 3,
+        cuisine_id: 1,
         cuisine_name: "Other",
         value: false
       }],
@@ -2047,41 +2059,10 @@ function _defineProperty(obj, key, value) {
         cuisines: [],
         categories: []
       },
-      ratings: ['1', '2', '3', '4', '5'],
+      ratings: ['1', '', '', '', '5'],
       prices: ['$', '', '', '$$$$'],
-      items: [{
-        restaurant: {
-          name: 'AAAAAAAAAAAAAAA'
-        }
-      }, {
-        restaurant: {
-          name: 'bbbbbbbb'
-        }
-      }, {
-        restaurant: {
-          name: 'ccccccc'
-        }
-      }, {
-        restaurant: {
-          name: 'ddddddd'
-        }
-      }, {
-        restaurant: {
-          name: 'eeeeeee'
-        }
-      }, {
-        restaurant: {
-          name: 'fffffff'
-        }
-      }, {
-        restaurant: {
-          name: 'ggggggg'
-        }
-      }, {
-        restaurant: {
-          name: 'hhhhhhh'
-        }
-      }]
+      selected_index: null,
+      loading: false
     };
   },
   watch: {
@@ -2097,8 +2078,11 @@ function _defineProperty(obj, key, value) {
   })),
   methods: {
     searchRestaurants: function searchRestaurants() {
-      this.$store.dispatch('zomatoApis/searchForRestaurants', {
-        cuisines: [1, 2, 3]
+      var _this = this;
+
+      this.loading = true;
+      this.$store.dispatch('zomatoApis/searchForRestaurants', this.filters)["finally"](function () {
+        _this.loading = false;
       });
     },
     updateCategory: function updateCategory(val, item) {
@@ -42943,7 +42927,10 @@ var render = function() {
                             _vm._l(_vm.categories, function(category) {
                               return _c(
                                 "v-col",
-                                { key: category.id, attrs: { cols: "12" } },
+                                {
+                                  key: "category-" + category.id,
+                                  attrs: { cols: "12" }
+                                },
                                 [
                                   _c("v-checkbox", {
                                     attrs: {
@@ -43000,7 +42987,7 @@ var render = function() {
                               return _c(
                                 "v-col",
                                 {
-                                  key: cuisine.cuisine_id,
+                                  key: "cuisine-" + cuisine.cuisine_id,
                                   attrs: { cols: "4" }
                                 },
                                 [
@@ -43132,6 +43119,48 @@ var render = function() {
             app: "",
             width: 500
           },
+          scopedSlots: _vm._u([
+            {
+              key: "prepend",
+              fn: function() {
+                return [
+                  _c(
+                    "v-list-item",
+                    { staticClass: "text-center" },
+                    [
+                      _c(
+                        "v-list-item-content",
+                        { staticClass: "text-center" },
+                        [
+                          _c(
+                            "v-list-item-title",
+                            { staticClass: "subtitle-2 font-weight-bold" },
+                            [
+                              _vm._v(
+                                "\n                        RESULTS\n                    "
+                              )
+                            ]
+                          )
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c("v-progress-linear", {
+                    attrs: {
+                      active: _vm.loading,
+                      indeterminate: "",
+                      absolute: "",
+                      color: "accent"
+                    }
+                  })
+                ]
+              },
+              proxy: true
+            }
+          ]),
           model: {
             value: _vm.drawer,
             callback: function($$v) {
@@ -43141,65 +43170,52 @@ var render = function() {
           }
         },
         [
-          _c(
-            "v-list-item",
-            { staticClass: "text-center" },
-            [
-              _c(
-                "v-list-item-content",
-                { staticClass: "text-center" },
-                [
-                  _c("v-list-item-title", [
-                    _vm._v("\n                    RESULTS\n                ")
-                  ])
-                ],
-                1
-              )
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c("v-divider"),
           _vm._v(" "),
           _c(
             "v-list",
-            { attrs: { dense: "" } },
+            { staticClass: "pt-0", attrs: { dense: "" } },
             [
               _c(
                 "v-list-item-group",
                 {
                   attrs: { color: "accent" },
                   model: {
-                    value: _vm.items,
+                    value: _vm.selected_index,
                     callback: function($$v) {
-                      _vm.items = $$v
+                      _vm.selected_index = $$v
                     },
-                    expression: "items"
+                    expression: "selected_index"
                   }
                 },
-                _vm._l(_vm.items, function(item) {
-                  return _c(
-                    "v-list-item",
-                    { key: item.restaurant.name },
-                    [
+                [
+                  _vm._l(_vm.api_results.restaurants, function(item) {
+                    return [
+                      _c("v-divider"),
+                      _vm._v(" "),
                       _c(
-                        "v-list-item-content",
+                        "v-list-item",
+                        { key: item.restaurant.id },
                         [
-                          _c("v-list-item-title", [
-                            _vm._v(
-                              "\n                            " +
-                                _vm._s(item.restaurant.name) +
-                                "\n                        "
-                            )
-                          ])
+                          _c(
+                            "v-list-item-content",
+                            [
+                              _c("v-list-item-title", [
+                                _vm._v(
+                                  "\n                                " +
+                                    _vm._s(item.restaurant.name) +
+                                    "\n                            "
+                                )
+                              ])
+                            ],
+                            1
+                          )
                         ],
                         1
                       )
-                    ],
-                    1
-                  )
-                }),
-                1
+                    ]
+                  })
+                ],
+                2
               )
             ],
             1
@@ -43223,7 +43239,7 @@ var render = function() {
                   _c("v-card-title", [_vm._v("Restaurant A")]),
                   _vm._v(
                     "\n                " +
-                      _vm._s(this.filters) +
+                      _vm._s(this.api_results.restaurants) +
                       "\n            "
                   )
                 ],
@@ -95321,7 +95337,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuetify_lib_components_VDivider__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! vuetify/lib/components/VDivider */ "./node_modules/vuetify/lib/components/VDivider/index.js");
 /* harmony import */ var vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! vuetify/lib/components/VList */ "./node_modules/vuetify/lib/components/VList/index.js");
 /* harmony import */ var vuetify_lib_components_VNavigationDrawer__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! vuetify/lib/components/VNavigationDrawer */ "./node_modules/vuetify/lib/components/VNavigationDrawer/index.js");
-/* harmony import */ var vuetify_lib_components_VRangeSlider__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! vuetify/lib/components/VRangeSlider */ "./node_modules/vuetify/lib/components/VRangeSlider/index.js");
+/* harmony import */ var vuetify_lib_components_VProgressLinear__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! vuetify/lib/components/VProgressLinear */ "./node_modules/vuetify/lib/components/VProgressLinear/index.js");
+/* harmony import */ var vuetify_lib_components_VRangeSlider__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! vuetify/lib/components/VRangeSlider */ "./node_modules/vuetify/lib/components/VRangeSlider/index.js");
 
 
 
@@ -95357,7 +95374,8 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
 
 
 
-_node_modules_vuetify_loader_lib_runtime_installComponents_js__WEBPACK_IMPORTED_MODULE_3___default()(component, {VAppBar: vuetify_lib_components_VAppBar__WEBPACK_IMPORTED_MODULE_4__["VAppBar"],VCard: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_5__["VCard"],VCardTitle: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_5__["VCardTitle"],VCheckbox: vuetify_lib_components_VCheckbox__WEBPACK_IMPORTED_MODULE_6__["VCheckbox"],VCol: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_7__["VCol"],VContainer: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_7__["VContainer"],VDivider: vuetify_lib_components_VDivider__WEBPACK_IMPORTED_MODULE_8__["VDivider"],VList: vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_9__["VList"],VListItem: vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_9__["VListItem"],VListItemContent: vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_9__["VListItemContent"],VListItemGroup: vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_9__["VListItemGroup"],VListItemTitle: vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_9__["VListItemTitle"],VNavigationDrawer: vuetify_lib_components_VNavigationDrawer__WEBPACK_IMPORTED_MODULE_10__["VNavigationDrawer"],VRangeSlider: vuetify_lib_components_VRangeSlider__WEBPACK_IMPORTED_MODULE_11__["VRangeSlider"],VRow: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_7__["VRow"]})
+
+_node_modules_vuetify_loader_lib_runtime_installComponents_js__WEBPACK_IMPORTED_MODULE_3___default()(component, {VAppBar: vuetify_lib_components_VAppBar__WEBPACK_IMPORTED_MODULE_4__["VAppBar"],VCard: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_5__["VCard"],VCardTitle: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_5__["VCardTitle"],VCheckbox: vuetify_lib_components_VCheckbox__WEBPACK_IMPORTED_MODULE_6__["VCheckbox"],VCol: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_7__["VCol"],VContainer: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_7__["VContainer"],VDivider: vuetify_lib_components_VDivider__WEBPACK_IMPORTED_MODULE_8__["VDivider"],VList: vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_9__["VList"],VListItem: vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_9__["VListItem"],VListItemContent: vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_9__["VListItemContent"],VListItemGroup: vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_9__["VListItemGroup"],VListItemTitle: vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_9__["VListItemTitle"],VNavigationDrawer: vuetify_lib_components_VNavigationDrawer__WEBPACK_IMPORTED_MODULE_10__["VNavigationDrawer"],VProgressLinear: vuetify_lib_components_VProgressLinear__WEBPACK_IMPORTED_MODULE_11__["VProgressLinear"],VRangeSlider: vuetify_lib_components_VRangeSlider__WEBPACK_IMPORTED_MODULE_12__["VRangeSlider"],VRow: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_7__["VRow"]})
 
 
 /* hot reload */
