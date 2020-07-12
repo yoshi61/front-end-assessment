@@ -1,37 +1,25 @@
 <template>
     <div>
-        kokokokokokokokokokokokokokokokok
+        <filters-bar></filters-bar>
+        <results-drawer></results-drawer>
+        <restaurant-details></restaurant-details>
     </div>
 </template>
 
 <script>
+    import filtersBar from './FiltersBar';
+    import resultsDrawer from './ResultsDrawer';
+    import restaurantDetails from './RestaurantDetails';
     export default {
         name:'dashboard',
 
-        data: () => ({
-
-        }),
-
-        computed: {
-
+        components: {
+            filtersBar,
+            resultsDrawer,
+            restaurantDetails
         },
 
-        methods:{
-
-        },
-
-        mounted: function() {
-            // set current application year
-            this.$store.dispatch('zomatoApis/searchForRestaurants')
-                .then(response => {
-                    console.log("kokokokokokokokokokokokokokokokokkokokoookokokokokokok");
-                    console.log(response.data);
-                })
-                .catch( error =>{
-                    console.log("popopopopopopopopopopopopopopopopopopopopo");
-                    console.log(error);
-                });
-        }
+        data: () => ({}),
 
     }
 </script>
