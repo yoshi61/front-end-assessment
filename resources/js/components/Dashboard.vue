@@ -139,7 +139,8 @@
             <transition name="fade" mode="out-in">
                 <v-card class="elevation-0 primaryLight">
                     <v-card-title>Restaurant A</v-card-title>
-                    {{ this.api_results.restaurants }}
+                    {{ this.api_results.restaurants[this.selected_index] }}
+                    {{ this.filters }}
                 </v-card>
             </transition>
         </v-container>
@@ -239,6 +240,8 @@
             filters: {
                 cuisines: [],
                 categories: [],
+                lat: null,
+                lon: null,
             },
 
             ratings: [
@@ -256,7 +259,7 @@
                 '$$$$',
             ],
 
-            selected_index: null,
+            selected_index: 0,
 
             loading: false,
         }),
@@ -310,9 +313,27 @@
                     this.filters.cuisines.splice(index, 1);
                 }
             },
+
+            getLocation() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(this.setLocation);
+                } else {
+                    console.log("Geolocation is not supported by this browser.");
+                }
+            },
+
+            setLocation(position) {
+                this.filters.lat = position.coords.latitude;
+                this.filters.lon = position.coords.longitude;
+            },
+
         },
 
         mounted: function() {
+
+            // only work with https
+            this.getLocation();
+
             this.searchRestaurants();
         }
 

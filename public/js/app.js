@@ -1985,6 +1985,7 @@ function _defineProperty(obj, key, value) {
 //
 //
 //
+//
 
 
 
@@ -2057,11 +2058,13 @@ function _defineProperty(obj, key, value) {
       }],
       filters: {
         cuisines: [],
-        categories: []
+        categories: [],
+        lat: null,
+        lon: null
       },
       ratings: ['1', '', '', '', '5'],
       prices: ['$', '', '', '$$$$'],
-      selected_index: null,
+      selected_index: 0,
       loading: false
     };
   },
@@ -2108,9 +2111,22 @@ function _defineProperty(obj, key, value) {
       if (index > -1) {
         this.filters.cuisines.splice(index, 1);
       }
+    },
+    getLocation: function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(this.setLocation);
+      } else {
+        console.log("Geolocation is not supported by this browser.");
+      }
+    },
+    setLocation: function setLocation(position) {
+      this.filters.lat = position.coords.latitude;
+      this.filters.lon = position.coords.longitude;
     }
   },
   mounted: function mounted() {
+    // only work with https
+    this.getLocation();
     this.searchRestaurants();
   }
 });
@@ -43239,7 +43255,11 @@ var render = function() {
                   _c("v-card-title", [_vm._v("Restaurant A")]),
                   _vm._v(
                     "\n                " +
-                      _vm._s(this.api_results.restaurants) +
+                      _vm._s(
+                        this.api_results.restaurants[this.selected_index]
+                      ) +
+                      "\n                " +
+                      _vm._s(this.filters) +
                       "\n            "
                   )
                 ],
