@@ -1906,6 +1906,44 @@ function _defineProperty(obj, key, value) {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -1913,6 +1951,73 @@ function _defineProperty(obj, key, value) {
   name: 'dashboard',
   data: function data() {
     return {
+      drawer: true,
+      categories: [{
+        id: 1,
+        name: "Delivery",
+        value: false
+      }, {
+        id: 2,
+        name: "Dine-out",
+        value: false
+      }, {
+        id: 5,
+        name: "Takeaway",
+        value: false
+      }, {
+        id: 11,
+        name: "Pubs & Bars",
+        value: false
+      }],
+      cuisines: [{
+        cuisine_id: 30,
+        cuisine_name: "Cafe Food",
+        value: false
+      }, {
+        cuisine_id: 161,
+        cuisine_name: "Coffee and Tea",
+        value: false
+      }, {
+        cuisine_id: 82,
+        cuisine_name: "Pizza",
+        value: false
+      }, {
+        cuisine_id: 40,
+        cuisine_name: "Fast Food",
+        value: false
+      }, {
+        cuisine_id: 3,
+        cuisine_name: "Asian",
+        value: false
+      }, {
+        cuisine_id: 5,
+        cuisine_name: "Bakery",
+        value: false
+      }, {
+        cuisine_id: 55,
+        cuisine_name: "Italian",
+        value: false
+      }, {
+        cuisine_id: 304,
+        cuisine_name: "Sandwich",
+        value: false
+      }, {
+        cuisine_id: 25,
+        cuisine_name: "Chinese",
+        value: false
+      }, {
+        cuisine_id: 983,
+        cuisine_name: "Pub Food",
+        value: false
+      }, {
+        cuisine_id: 3,
+        cuisine_name: "Other",
+        value: false
+      }],
+      filters: {
+        cuisines: [],
+        categories: []
+      },
       items: [{
         restaurant: {
           name: 'AAAAAAAAAAAAAAA'
@@ -1948,21 +2053,50 @@ function _defineProperty(obj, key, value) {
       }]
     };
   },
+  watch: {
+    filters: {
+      deep: true,
+      handler: function handler() {
+        this.searchRestaurants();
+      }
+    }
+  },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])({
     api_results: 'zomatoApis/getResultSet'
   })),
-  mounted: function mounted() {
-    var _this = this;
+  methods: {
+    searchRestaurants: function searchRestaurants() {
+      this.$store.dispatch('zomatoApis/searchForRestaurants', {
+        cuisines: [1, 2, 3]
+      });
+    },
+    updateCategory: function updateCategory(val, item) {
+      if (val) {
+        this.filters.categories.push(item.id);
+        return;
+      }
 
-    this.$store.dispatch('zomatoApis/searchForRestaurants', {
-      cuisines: [1, 2, 3]
-    })["finally"](function () {
-      console.log("kokokokokokokokokokokokokokokokokkokokoookokokokokokok");
-      console.log("kokokokokokokokokokokokokokokokokkokokoookokokokokokok");
-      console.log(_this.api_results);
-      console.log("kokokokokokokokokokokokokokokokokkokokoookokokokokokok");
-      console.log("kokokokokokokokokokokokokokokokokkokokoookokokokokokok");
-    });
+      var index = this.filters.categories.indexOf(item.id);
+
+      if (index > -1) {
+        this.filters.categories.splice(index, 1);
+      }
+    },
+    updateCuisine: function updateCuisine(val, item) {
+      if (val) {
+        this.filters.cuisines.push(item.cuisine_id);
+        return;
+      }
+
+      var index = this.filters.cuisines.indexOf(item.cuisine_id);
+
+      if (index > -1) {
+        this.filters.cuisines.splice(index, 1);
+      }
+    }
+  },
+  mounted: function mounted() {
+    this.searchRestaurants();
   }
 });
 
@@ -42752,14 +42886,110 @@ var render = function() {
                 [
                   _c(
                     "v-row",
+                    { attrs: { "no-gutters": "" } },
                     [
-                      _c("v-col"),
+                      _c(
+                        "v-col",
+                        { attrs: { cols: "3" } },
+                        [
+                          _c(
+                            "v-row",
+                            { attrs: { "no-gutters": "" } },
+                            [_c("v-col", [_c("div", [_vm._v("CATEGORY")])])],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "v-row",
+                            { attrs: { "no-gutters": "" } },
+                            _vm._l(_vm.categories, function(category) {
+                              return _c(
+                                "v-col",
+                                { key: category.id, attrs: { cols: "12" } },
+                                [
+                                  _c("v-checkbox", {
+                                    attrs: {
+                                      label: category.name,
+                                      "hide-details": ""
+                                    },
+                                    on: {
+                                      change: function($event) {
+                                        return _vm.updateCategory(
+                                          $event,
+                                          category
+                                        )
+                                      }
+                                    },
+                                    model: {
+                                      value: category.value,
+                                      callback: function($$v) {
+                                        _vm.$set(category, "value", $$v)
+                                      },
+                                      expression: "category.value"
+                                    }
+                                  })
+                                ],
+                                1
+                              )
+                            }),
+                            1
+                          )
+                        ],
+                        1
+                      ),
                       _vm._v(" "),
-                      _c("v-col"),
-                      _vm._v(" "),
-                      _c("v-col"),
-                      _vm._v(" "),
-                      _c("v-col")
+                      _c(
+                        "v-col",
+                        { attrs: { cols: "9" } },
+                        [
+                          _c(
+                            "v-row",
+                            { attrs: { "no-gutters": "" } },
+                            [_c("v-col", [_vm._v("CUISINE")])],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "v-row",
+                            { attrs: { "no-gutters": "" } },
+                            _vm._l(_vm.cuisines, function(cuisine) {
+                              return _c(
+                                "v-col",
+                                {
+                                  key: cuisine.cuisine_id,
+                                  attrs: { cols: "4" }
+                                },
+                                [
+                                  _c("v-checkbox", {
+                                    attrs: {
+                                      label: cuisine.cuisine_name,
+                                      "hide-details": ""
+                                    },
+                                    on: {
+                                      change: function($event) {
+                                        return _vm.updateCuisine(
+                                          $event,
+                                          cuisine
+                                        )
+                                      }
+                                    },
+                                    model: {
+                                      value: cuisine.value,
+                                      callback: function($$v) {
+                                        _vm.$set(cuisine, "value", $$v)
+                                      },
+                                      expression: "cuisine.value"
+                                    }
+                                  })
+                                ],
+                                1
+                              )
+                            }),
+                            1
+                          )
+                        ],
+                        1
+                      )
                     ],
                     1
                   )
@@ -42822,11 +43052,11 @@ var render = function() {
                 {
                   attrs: { color: "accent" },
                   model: {
-                    value: _vm.item,
+                    value: _vm.items,
                     callback: function($$v) {
-                      _vm.item = $$v
+                      _vm.items = $$v
                     },
-                    expression: "item"
+                    expression: "items"
                   }
                 },
                 _vm._l(_vm.items, function(item) {
@@ -42871,7 +43101,14 @@ var render = function() {
               _c(
                 "v-card",
                 { staticClass: "elevation-0 primaryLight" },
-                [_c("v-card-title", [_vm._v("Restaurant A")])],
+                [
+                  _c("v-card-title", [_vm._v("Restaurant A")]),
+                  _vm._v(
+                    "\n                " +
+                      _vm._s(this.filters) +
+                      "\n            "
+                  )
+                ],
                 1
               )
             ],
@@ -94961,10 +95198,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_vuetify_loader_lib_runtime_installComponents_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_node_modules_vuetify_loader_lib_runtime_installComponents_js__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var vuetify_lib_components_VAppBar__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vuetify/lib/components/VAppBar */ "./node_modules/vuetify/lib/components/VAppBar/index.js");
 /* harmony import */ var vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vuetify/lib/components/VCard */ "./node_modules/vuetify/lib/components/VCard/index.js");
-/* harmony import */ var vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! vuetify/lib/components/VGrid */ "./node_modules/vuetify/lib/components/VGrid/index.js");
-/* harmony import */ var vuetify_lib_components_VDivider__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! vuetify/lib/components/VDivider */ "./node_modules/vuetify/lib/components/VDivider/index.js");
-/* harmony import */ var vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! vuetify/lib/components/VList */ "./node_modules/vuetify/lib/components/VList/index.js");
-/* harmony import */ var vuetify_lib_components_VNavigationDrawer__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! vuetify/lib/components/VNavigationDrawer */ "./node_modules/vuetify/lib/components/VNavigationDrawer/index.js");
+/* harmony import */ var vuetify_lib_components_VCheckbox__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! vuetify/lib/components/VCheckbox */ "./node_modules/vuetify/lib/components/VCheckbox/index.js");
+/* harmony import */ var vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! vuetify/lib/components/VGrid */ "./node_modules/vuetify/lib/components/VGrid/index.js");
+/* harmony import */ var vuetify_lib_components_VDivider__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! vuetify/lib/components/VDivider */ "./node_modules/vuetify/lib/components/VDivider/index.js");
+/* harmony import */ var vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! vuetify/lib/components/VList */ "./node_modules/vuetify/lib/components/VList/index.js");
+/* harmony import */ var vuetify_lib_components_VNavigationDrawer__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! vuetify/lib/components/VNavigationDrawer */ "./node_modules/vuetify/lib/components/VNavigationDrawer/index.js");
 
 
 
@@ -94998,7 +95236,8 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
 
 
 
-_node_modules_vuetify_loader_lib_runtime_installComponents_js__WEBPACK_IMPORTED_MODULE_3___default()(component, {VAppBar: vuetify_lib_components_VAppBar__WEBPACK_IMPORTED_MODULE_4__["VAppBar"],VCard: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_5__["VCard"],VCardTitle: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_5__["VCardTitle"],VCol: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_6__["VCol"],VContainer: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_6__["VContainer"],VDivider: vuetify_lib_components_VDivider__WEBPACK_IMPORTED_MODULE_7__["VDivider"],VList: vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_8__["VList"],VListItem: vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_8__["VListItem"],VListItemContent: vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_8__["VListItemContent"],VListItemGroup: vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_8__["VListItemGroup"],VListItemTitle: vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_8__["VListItemTitle"],VNavigationDrawer: vuetify_lib_components_VNavigationDrawer__WEBPACK_IMPORTED_MODULE_9__["VNavigationDrawer"],VRow: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_6__["VRow"]})
+
+_node_modules_vuetify_loader_lib_runtime_installComponents_js__WEBPACK_IMPORTED_MODULE_3___default()(component, {VAppBar: vuetify_lib_components_VAppBar__WEBPACK_IMPORTED_MODULE_4__["VAppBar"],VCard: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_5__["VCard"],VCardTitle: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_5__["VCardTitle"],VCheckbox: vuetify_lib_components_VCheckbox__WEBPACK_IMPORTED_MODULE_6__["VCheckbox"],VCol: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_7__["VCol"],VContainer: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_7__["VContainer"],VDivider: vuetify_lib_components_VDivider__WEBPACK_IMPORTED_MODULE_8__["VDivider"],VList: vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_9__["VList"],VListItem: vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_9__["VListItem"],VListItemContent: vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_9__["VListItemContent"],VListItemGroup: vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_9__["VListItemGroup"],VListItemTitle: vuetify_lib_components_VList__WEBPACK_IMPORTED_MODULE_9__["VListItemTitle"],VNavigationDrawer: vuetify_lib_components_VNavigationDrawer__WEBPACK_IMPORTED_MODULE_10__["VNavigationDrawer"],VRow: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_7__["VRow"]})
 
 
 /* hot reload */
