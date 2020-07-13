@@ -135,12 +135,12 @@
         </v-navigation-drawer>
 
         <!--    restaurant details    -->
+<!--   TODO restaurant details     -->
         <v-container class="primaryLight fill-height" fluid>
             <transition name="fade" mode="out-in">
                 <v-card class="elevation-0 primaryLight">
                     <v-card-title>Restaurant A</v-card-title>
                     {{ this.api_results.restaurants[this.selected_index] }}
-                    {{ this.filters }}
                 </v-card>
             </transition>
         </v-container>
@@ -149,6 +149,7 @@
 
 <script>
     import { mapGetters } from 'vuex'
+    import config from'../app-config';
 
     export default {
         name:'dashboard',
@@ -276,7 +277,12 @@
         computed: {
             ...mapGetters({
                 api_results : 'zomatoApis/getResultSet',
-            })
+            }),
+
+
+            adelaide_geolocation: function(){
+                return config.ADELAIDE_GEOLOCATION;
+            },
         },
 
         methods: {
@@ -314,12 +320,9 @@
                 }
             },
 
-            getLocation() {
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(this.setLocation);
-                } else {
-                    console.log("Geolocation is not supported by this browser.");
-                }
+            setDefaultLocation() {
+                this.filters.lat = this.adelaide_geolocation.latitude;
+                this.filters.lon = this.adelaide_geolocation.longitude;
             },
 
             setLocation(position) {
@@ -327,12 +330,28 @@
                 this.filters.lon = position.coords.longitude;
             },
 
+            setCurrentLocation() {
+
+                // if not https, use default location
+                if (location.protocol !== 'https:') {
+                    this.setDefaultLocation();
+                    return;
+                }
+
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(this.setLocation);
+                } else {
+                    this.setDefaultLocation();
+                    console.log("Geolocation is not supported by this browser.");
+                }
+            },
+
         },
 
         mounted: function() {
 
-            // only work with https
-            this.getLocation();
+            // set current location for search
+            this.setCurrentLocation();
 
             this.searchRestaurants();
         }

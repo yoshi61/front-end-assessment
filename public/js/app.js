@@ -1790,6 +1790,7 @@ module.exports = {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var _app_config__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../app-config */ "./resources/js/app-config.js");
 function ownKeys(object, enumerableOnly) {
   var keys = Object.keys(object);
 
@@ -1989,6 +1990,7 @@ function _defineProperty(obj, key, value) {
 
 
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'dashboard',
   data: function data() {
@@ -2078,7 +2080,11 @@ function _defineProperty(obj, key, value) {
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])({
     api_results: 'zomatoApis/getResultSet'
-  })),
+  }), {
+    adelaide_geolocation: function adelaide_geolocation() {
+      return _app_config__WEBPACK_IMPORTED_MODULE_1__["default"].ADELAIDE_GEOLOCATION;
+    }
+  }),
   methods: {
     searchRestaurants: function searchRestaurants() {
       var _this = this;
@@ -2112,21 +2118,32 @@ function _defineProperty(obj, key, value) {
         this.filters.cuisines.splice(index, 1);
       }
     },
-    getLocation: function getLocation() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(this.setLocation);
-      } else {
-        console.log("Geolocation is not supported by this browser.");
-      }
+    setDefaultLocation: function setDefaultLocation() {
+      this.filters.lat = this.adelaide_geolocation.latitude;
+      this.filters.lon = this.adelaide_geolocation.longitude;
     },
     setLocation: function setLocation(position) {
       this.filters.lat = position.coords.latitude;
       this.filters.lon = position.coords.longitude;
+    },
+    setCurrentLocation: function setCurrentLocation() {
+      // if not https, use default location
+      if (location.protocol !== 'https:') {
+        this.setDefaultLocation();
+        return;
+      }
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(this.setLocation);
+      } else {
+        this.setDefaultLocation();
+        console.log("Geolocation is not supported by this browser.");
+      }
     }
   },
   mounted: function mounted() {
-    // only work with https
-    this.getLocation();
+    // set current location for search
+    this.setCurrentLocation();
     this.searchRestaurants();
   }
 });
@@ -43060,7 +43077,7 @@ var render = function() {
                         },
                         [
                           _vm._v(
-                            "\n                        RATING\n                    "
+                            "\n                            RATING\n                        "
                           )
                         ]
                       ),
@@ -43091,7 +43108,7 @@ var render = function() {
                         },
                         [
                           _vm._v(
-                            "\n                        COST\n                    "
+                            "\n                            COST\n                        "
                           )
                         ]
                       ),
@@ -43153,7 +43170,7 @@ var render = function() {
                             { staticClass: "subtitle-2 font-weight-bold" },
                             [
                               _vm._v(
-                                "\n                        RESULTS\n                    "
+                                "\n                            RESULTS\n                        "
                               )
                             ]
                           )
@@ -43217,9 +43234,9 @@ var render = function() {
                             [
                               _c("v-list-item-title", [
                                 _vm._v(
-                                  "\n                                " +
+                                  "\n                                    " +
                                     _vm._s(item.restaurant.name) +
-                                    "\n                            "
+                                    "\n                                "
                                 )
                               ])
                             ],
@@ -43254,13 +43271,11 @@ var render = function() {
                 [
                   _c("v-card-title", [_vm._v("Restaurant A")]),
                   _vm._v(
-                    "\n                " +
+                    "\n                    " +
                       _vm._s(
                         this.api_results.restaurants[this.selected_index]
                       ) +
-                      "\n                " +
-                      _vm._s(this.filters) +
-                      "\n            "
+                      "\n                "
                   )
                 ],
                 1
@@ -95222,6 +95237,25 @@ var zomato = {
 };
 /* harmony default export */ __webpack_exports__["default"] = ({
   zomato: zomato
+});
+
+/***/ }),
+
+/***/ "./resources/js/app-config.js":
+/*!************************************!*\
+  !*** ./resources/js/app-config.js ***!
+  \************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ({
+  namespaced: true,
+  ADELAIDE_GEOLOCATION: {
+    latitude: -34.921230,
+    longitude: 138.599503
+  }
 });
 
 /***/ }),
