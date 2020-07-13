@@ -95,6 +95,7 @@
                 app
                 :width="500"
                 class="primary"
+                ref="resultDrawer"
         >
             <template v-slot:prepend>
                 <v-list-item
@@ -114,7 +115,7 @@
                 ></v-progress-linear>
             </template>
 
-            <v-list dense class="pt-0">
+            <v-list dense class="pt-0" ref="resultList">
                 <v-list-item-group v-model="selected_index" color="accent">
 
                     <template v-for="item in api_results.restaurants">
@@ -134,10 +135,21 @@
                 </v-list-item-group>
             </v-list>
 
+            <!--   Load more loading   -->
+            <div class="text-center my-2">
+                <v-progress-circular
+                        v-if="load_more_loading && !loading"
+                        indeterminate
+                        color="accent"
+                ></v-progress-circular>
+                <v-btn v-if="!load_more_loading && !loading" @click="loadMoreRestaurants" text>
+                    LOAD MORE
+                </v-btn>
+            </div>
+
         </v-navigation-drawer>
 
         <!--    restaurant details    -->
-<!--   TODO restaurant details     -->
         <v-container class="primaryLight fill-height" fluid>
             <v-row class="fill-height" justify="start" align="start">
                 <v-col>
@@ -216,6 +228,7 @@
                 </v-col>
             </v-row>
         </v-container>
+
     </v-container>
 </template>
 
@@ -310,6 +323,8 @@
                 }
             ],
 
+            start: 0,
+
             filters: {
                 cuisines: [],
                 categories: [],
@@ -337,6 +352,10 @@
             selected_restaurant: null,
 
             loading: false,
+
+            // infinite scrolls
+            load_more_loading: false,
+            bottom: false,
         }),
 
         watch: {
@@ -361,13 +380,24 @@
 
         methods: {
             searchRestaurants(){
+
+                // start loading
                 this.loading = true;
+
+                // reset offset
+                this.start = 0;
+
+                // get request
                 this.$store.dispatch('zomatoApis/searchForRestaurants', this.filters)
                     .then(response => {
                         if(response.data.results_found > 0){
+
                             //set the first result to selected restaurant
                             this.selected_restaurant = JSON.parse(JSON.stringify(response.data.restaurants[0]));
                             this.selected_index = 0;
+
+                            // update start offset
+                            this.start = response.data.results_shown;
                         }
                     })
                     .catch( error =>{
@@ -375,6 +405,37 @@
                     })
                     .finally(()=>{
                         this.loading = false;
+                    });
+            },
+
+            loadMoreRestaurants(){
+
+                // load more loading start
+                this.load_more_loading = true;
+
+                // prepare params
+                let params = {
+                    start: this.start,
+                    cuisines: this.filters.cuisines,
+                    categories: this.filters.categories,
+                    lat: this.filters.lat,
+                    lon: this.filters.lon,
+                };
+
+                // get request
+                this.$store.dispatch('zomatoApis/loadMoreRestaurants', params)
+                    .then(response => {
+                        if(response.data.results_found > 0){
+
+                            // update start offset
+                            this.start += response.data.results_shown;
+                        }
+                    })
+                    .catch( error =>{
+                        console.log(error);
+                    })
+                    .finally(()=>{
+                        this.load_more_loading = false;
                     });
             },
 
@@ -427,8 +488,12 @@
                 }
 
                 if (navigator.geolocation) {
+
+                    // get and set user location
                     navigator.geolocation.getCurrentPosition(this.setLocation);
                 } else {
+
+                    // set default location
                     this.setDefaultLocation();
                     console.log("Geolocation is not supported by this browser.");
                 }
@@ -447,8 +512,7 @@
             this.setCurrentLocation();
 
             this.searchRestaurants();
-        }
-
+        },
     }
 </script>
 
