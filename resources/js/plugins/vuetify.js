@@ -20,7 +20,7 @@ export default new Vuetify({
                 secondary: '#fff',
                 success: colors.lightGreen.base,
                 warning: colors.amber.base,
-                inner: colors.grey.lighten2,
+                inner: colors.grey.darken1,
             },
             dark: {
                 primary: colors.green.base,

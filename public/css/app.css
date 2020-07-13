@@ -43548,15 +43548,3 @@ html {
     position: absolute;
     width: 100%;
 }
-.v-input--is-readonly *{
-    cursor: not-allowed !important;
-}
-.date-input *{
-    cursor: pointer !important;
-}
-
-
-.colorful{
-    background-color: #42ecf5;
-    background-image: linear-gradient(120deg, #42ecf5, #42f5a1);
-}

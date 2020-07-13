@@ -8,6 +8,7 @@
                 color="secondary"
                 light
                 :height="200"
+                class="elevation-0"
         >
             <v-row class="px-4">
                 <v-col cols="8">
@@ -120,9 +121,10 @@
                         <v-divider></v-divider>
                         <v-list-item
                                 :key="item.restaurant.id"
+                                @click="setSelectedRestaurant(item)"
                         >
                             <v-list-item-content>
-                                <v-list-item-title>
+                                <v-list-item-title class="pl-8">
                                     {{ item.restaurant.name }}
                                 </v-list-item-title>
                             </v-list-item-content>
@@ -137,12 +139,82 @@
         <!--    restaurant details    -->
 <!--   TODO restaurant details     -->
         <v-container class="primaryLight fill-height" fluid>
-            <transition name="fade" mode="out-in">
-                <v-card class="elevation-0 primaryLight">
-                    <v-card-title>Restaurant A</v-card-title>
-                    {{ this.api_results.restaurants[this.selected_index] }}
-                </v-card>
-            </transition>
+            <v-row class="fill-height" justify="start" align="start">
+                <v-col>
+                    <transition name="fade" mode="out-in">
+                        <v-card v-if="!!selected_restaurant" class="elevation-0 primaryLight">
+                            <v-container>
+                                <v-row justify="center">
+                                    <v-col cols="auto">
+                                        <v-spacer></v-spacer>
+                                        <v-img
+                                                height="400"
+                                                width="400"
+                                                :src="this.selected_restaurant.restaurant.thumb"
+                                        ></v-img>
+                                    </v-col>
+
+                                    <v-col cols="12" md="4" lg="6" class="pl-0">
+                                        <v-card-title>
+                                            <h1>{{ this.selected_restaurant.restaurant.name }}</h1>
+                                        </v-card-title>
+
+                                        <v-card-subtitle class=" mt-1 caption grey--text">{{ this.selected_restaurant.restaurant.location.address }}</v-card-subtitle>
+
+                                        <v-card-text>
+                                            <v-row
+                                                    align="center"
+                                                    class="mx-0"
+                                            >
+                                                <v-rating
+                                                        :value="parseFloat(selected_restaurant.restaurant.user_rating.aggregate_rating)"
+                                                        color="amber"
+                                                        dense
+                                                        half-increments
+                                                        readonly
+                                                        size="20"
+                                                ></v-rating>
+
+                                                <div class="grey--text ml-4">{{ this.selected_restaurant.restaurant.user_rating.aggregate_rating }} ({{this.selected_restaurant.restaurant.user_rating.votes}})</div>
+                                            </v-row>
+
+                                            <div class="my-2 subtitle-1">
+                                                {{priceToDollarMarks(this.selected_restaurant.restaurant.price_range)}} • {{this.selected_restaurant.restaurant.cuisines}}
+                                            </div>
+
+                                            <div>
+
+                                                <v-chip-group column active-class="primary--text">
+                                                    <v-chip
+                                                            v-for="highlight in this.selected_restaurant.restaurant.highlights"
+                                                            :key="highlight"
+                                                    >{{highlight}}</v-chip>
+                                                </v-chip-group>
+                                            </div>
+
+                                            <v-list-item two-line>
+                                                <v-list-item-content class="pt-1 pb-0">
+                                                    <v-list-item-title class="subtitle-2 font-weight-bold">PHONE NUMBER</v-list-item-title>
+                                                    <v-list-item-subtitle class="title inner--text">{{this.selected_restaurant.restaurant.phone_numbers}}</v-list-item-subtitle>
+                                                </v-list-item-content>
+                                            </v-list-item>
+
+                                            <v-list-item two-line>
+                                                <v-list-item-content class="pt-1 pb-0">
+                                                    <v-list-item-title class="subtitle-2 font-weight-bold">OPENING HOURS</v-list-item-title>
+                                                    <v-list-item-subtitle class="title inner--text">{{this.selected_restaurant.restaurant.timings}}</v-list-item-subtitle>
+                                                </v-list-item-content>
+                                            </v-list-item>
+
+                                        </v-card-text>
+
+                                    </v-col>
+                                </v-row>
+                            </v-container>
+                        </v-card>
+                    </transition>
+                </v-col>
+            </v-row>
         </v-container>
     </v-container>
 </template>
@@ -262,6 +334,8 @@
 
             selected_index: 0,
 
+            selected_restaurant: null,
+
             loading: false,
         }),
 
@@ -289,6 +363,16 @@
             searchRestaurants(){
                 this.loading = true;
                 this.$store.dispatch('zomatoApis/searchForRestaurants', this.filters)
+                    .then(response => {
+                        if(response.data.results_found > 0){
+                            //set the first result to selected restaurant
+                            this.selected_restaurant = JSON.parse(JSON.stringify(response.data.restaurants[0]));
+                            this.selected_index = 0;
+                        }
+                    })
+                    .catch( error =>{
+                        console.log(error);
+                    })
                     .finally(()=>{
                         this.loading = false;
                     });
@@ -320,6 +404,10 @@
                 }
             },
 
+            setSelectedRestaurant(item) {
+                this.selected_restaurant = item;
+            },
+
             setDefaultLocation() {
                 this.filters.lat = this.adelaide_geolocation.latitude;
                 this.filters.lon = this.adelaide_geolocation.longitude;
@@ -345,6 +433,11 @@
                     console.log("Geolocation is not supported by this browser.");
                 }
             },
+
+            priceToDollarMarks(val){
+                let str = "$";
+                return str.repeat(val);
+            }
 
         },
 

@@ -8,7 +8,7 @@ const state = {
         results_found: 0,
         results_start: 0,
         results_shown: 0
-    }
+    },
 };
 
 // getters
@@ -20,22 +20,32 @@ const getters = {
 
 const actions = {
     searchForRestaurants(context, params) {
-        return API_ZOMATO.get('/search', {params: params})
-            .then( response => {
+        return new Promise((resolve, reject) => {
+            API_ZOMATO.get('/search', {params: params})
+                .then(response => {
 
-                if (response.status != 200){
-                    context.commit('setApiData', {restaurants:[], results_found: 0, results_start: 0, results_shown: 0})
-                }else{
-                    context.commit('setApiData', response.data);
-                }
+                    if (response.status != 200) {
+                        context.commit('setApiData', {
+                            restaurants: [],
+                            results_found: 0,
+                            results_start: 0,
+                            results_shown: 0
+                        });
+                        reject(response.status)
+                    } else {
+                        context.commit('setApiData', response.data);
+                        resolve(response);
+                    }
 
-            })
-            .catch( error =>{
-                if(!!error.response){
-                    context.commit('setApiResponseCode', error.response.status)
-                }
-                console.log(error.message);
-            });
+                })
+                .catch(error => {
+                    if (!!error.response) {
+                        context.commit('setApiResponseCode', error.response.status)
+                    }
+                    console.log(error.message);
+                    reject(error);
+                })
+        });
     },
 
     // Reset api data to default
